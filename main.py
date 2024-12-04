@@ -2,51 +2,53 @@ from fraction import Fraction
 
 def main():
     try:
-        # Basic operations
-        f1 = Fraction(3, 4)
-        f2 = Fraction(1, 4)
-        print(f"Addition: {f1} + {f2} = {f1 + f2}")
-        print(f"Subtraction: {f1} - {f2} = {f1 - f2}")
-        print(f"Multiplication: {f1} * {f2} = {f1 * f2}")
-        print(f"Division: {f1} / {f2} = {f1 / f2}")
+        # Création de fractions
+        f1 = Fraction(2, 5)  # 2/5
+        f2 = Fraction(7, 3)  # 7/3
+        f3 = Fraction(-4, 6)  # -4/6 (réduit à -2/3)
 
-        # Integer operations
-        print(f"Addition with int: {f1} + 1 = {f1 + 1}")
-        print(f"Subtraction with int: {f1} - 1 = {f1 - 1}")
+        print("Fraction 1:", f1)
+        print("Fraction 2:", f2)
+        print("Fraction 3:", f3)
 
-        # Simplification test
-        f3 = Fraction(6, 8)
-        print(f"Simplified fraction: {f3}")
+        # Test des propriétés
+        print("f1 is zero:", f1.is_zero())  # False
+        print("f3 is zero:", f3.is_zero())  # False
+        print("f2 is integer:", f2.is_integer())  # False
+        print("Fraction 3 is proper:", f3.is_proper())  # True
 
-        # Float conversion
-        print(f"Decimal value: {float(f1)}")
+        # Test des opérateurs arithmétiques
+        f4 = f1 + f3
+        f5 = f2 - f1
+        f6 = f1 * f3
+        f7 = f2 / f1
 
-        f4 = Fraction(1, 1)
-        f5 = Fraction(1, 3)
-        f6 = Fraction(1, 3)
+        print("f1 + f3 =", f4)  # 2/5 + (-2/3) = -4/15
+        print("f2 - f1 =", f5)  # 7/3 - 2/5 = 29/15
+        print("f1 * f3 =", f6)  # 2/5 * (-2/3) = -4/15
+        print("f2 / f1 =", f7)  # 7/3 ÷ 2/5 = 35/6
 
-        print(f4.is_zero())  # False
-        print(f6.is_integer())  # True (2/4 = 1/2)
-        print(f4.is_proper())  # True
-        print(f6.is_unit())  # False (numérateur != 1 après simplification)
-        print(f4.is_adjacent_to(f5))  # True (1/2 - 1/3 = 1/6)
+        # Test d'autres opérations
+        f8 = f2 ** 2
+        print("f2 ** 2 =", f8)  # 7/3 ** 2 = 49/9
 
-        # Exception handling
+        # Test de la méthode as_mixed_number
+        f9 = Fraction(-10, 4)
+        print("Fraction 9 as mixed number:", f9.as_mixed_number())  # -3 1/2
+
+        # Test d'exceptions
         try:
-            Fraction(1, 0)
+            f10 = Fraction(3, 0)  # Denominator cannot be zero
         except ValueError as e:
-            print(f"Error: {e}")
+            print("Caught exception:", e)
 
-        try:
-            f1 / Fraction(0)
-        except ZeroDivisionError as e:
-            print(f"Error: {e}")
+        # Test de fractions adjacentes
+        f11 = Fraction(3, 5)
+        f12 = Fraction(4, 5)
+        print("f11 is adjacent to f12:", f11.is_adjacent_to(f12))  # True (difference = 1/5)
 
     except Exception as e:
-        print(f"Unexpected error: {e}")
-
-
-
+        print("An error occurred:", e)
 
 if __name__ == "__main__":
     main()

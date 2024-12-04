@@ -1,4 +1,5 @@
 from typing import Union
+import math
 
 class Fraction:
     """Class representing a fraction and operations on it.
@@ -6,37 +7,23 @@ class Fraction:
     Supports exact arithmetic operations and ensures fractions are always simplified.
     """
 
-    def __init__(self, num: int = 0, den: int = 1):
-        """Initialize a fraction with numerator and denominator.
-
-        PRE : den != 0
-        POST : The fraction is reduced to its simplest form.
-        RAISES : ValueError if the denominator is zero.
-        """
-        if den == 0:
+    def __init__(self, numerator: int, denominator: int):
+        if denominator == 0:
             raise ValueError("Denominator cannot be zero.")
-        self._numerator = num
-        self._denominator = den
-        self._simplify()
+
+        gcd = math.gcd(numerator, denominator)
+        self._numerator = numerator // gcd
+        self._denominator = denominator // gcd
 
     @property
     def numerator(self) -> int:
-        """Returns the numerator of the fraction."""
         return self._numerator
 
     @property
     def denominator(self) -> int:
-        """Returns the denominator of the fraction."""
         return self._denominator
 
-    def _simplify(self):
-        """Simplify the fraction using the greatest common divisor (GCD)."""
-        gcd = self._pgcd(abs(self._numerator), abs(self._denominator))
-        self._numerator //= gcd
-        self._denominator //= gcd
-        if self._denominator < 0:  # Ensure denominator is always positive
-            self._numerator *= -1
-            self._denominator *= -1
+
 
     @staticmethod
     def _pgcd(a: int, b: int) -> int:
@@ -44,6 +31,25 @@ class Fraction:
         while b:
             a, b = b, a % b
         return a
+
+    def as_mixed_number(self):
+        """Return a textual representation of the reduced form of the fraction as a mixed number
+
+        A mixed number is the sum of an integer and a proper fraction."""
+        if self.numerator % self.denominator == 0:
+            # La fraction est un entier
+            return str(self.numerator // self.denominator)
+
+        # Calcul des parties entière et fractionnaire
+        whole = self.numerator // self.denominator
+        fraction_part = abs(self.numerator % self.denominator)
+
+        if whole == 0:
+            # La fraction n'a pas de partie entière
+            return f"{self.numerator}/{self.denominator}"
+
+        # Combinaison partie entière et fraction
+        return f"{whole} {fraction_part}/{self.denominator}"
 
     def __str__(self) -> str:
         """Returns a string representation of the fraction."""
@@ -79,6 +85,12 @@ class Fraction:
             return Fraction(num, den)
         raise TypeError("Multiplication is only supported between Fractions or integers.")
 
+    def __pow__(self, exp):
+        """Élève une fraction à une puissance entière."""
+        if exp < 0:
+            return Fraction(self.denominator ** abs(exp), self.numerator ** abs(exp))
+        return Fraction(self.numerator ** exp, self.denominator ** exp)
+
     def __truediv__(self, other: Union["Fraction", int]) -> "Fraction":
         """Division of fractions or integers."""
         if isinstance(other, int):
@@ -102,43 +114,22 @@ class Fraction:
         return self.numerator / self.denominator
 
     def is_zero(self) -> bool:
-        """Check if a fraction's value is 0
-
-        PRE: The fraction is valid (denominator != 0).
-        POST: Returns True if the fraction equals 0, False otherwise.
-        """
+        """Check if a fraction's value is 0"""
         return self.numerator == 0
 
     def is_integer(self) -> bool:
-        """Check if a fraction is an integer (e.g., 8/4, 3, 2/2).
-
-        PRE: The fraction is valid (denominator != 0).
-        POST: Returns True if the fraction is an integer, False otherwise.
-        """
+        """Check if a fraction is an integer (e.g., 8/4, 3, 2/2)."""
         return self.numerator % self.denominator == 0
 
     def is_proper(self) -> bool:
-        """Check if the absolute value of the fraction is < 1.
-
-        PRE: The fraction is valid (denominator != 0).
-        POST: Returns True if the absolute value of the fraction is < 1, False otherwise.
-        """
+        """Check if the absolute value of the fraction is < 1."""
         return abs(self.numerator) < abs(self.denominator)
 
     def is_unit(self) -> bool:
-        """Check if a fraction's numerator is 1 in its reduced form.
-
-        PRE: The fraction is valid (denominator != 0) and reduced.
-        POST: Returns True if the numerator is 1, False otherwise.
-        """
+        """Check if a fraction's numerator is 1 in its reduced form."""
         return self.numerator == 1
 
     def is_adjacent_to(self, other: 'Fraction') -> bool:
-        """Check if two fractions differ by a unit fraction.
-
-        PRE: Both fractions are valid (denominator != 0).
-        POST: Returns True if the absolute value of the difference is a unit fraction, False otherwise.
-        """
+        """Check if two fractions differ by a unit fraction."""
         difference = self - other
-        difference._simplify()
         return abs(difference.numerator) == 1 and difference.denominator != 0
