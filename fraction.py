@@ -126,7 +126,7 @@ class Fraction:
 
     def is_unit(self) -> bool:
         """Check if a fraction's numerator is 1 in its reduced form."""
-        return self.numerator == 1
+        return abs(self.numerator) == 1
 
     def __sub__(self, other: Union["Fraction", int]) -> "Fraction":
         """Soustraction des fractions ou des entiers."""
@@ -145,7 +145,7 @@ class Fraction:
         # Debug: affiche la différence pour vérifier qu'elle est correcte
         print(f"Debug: Différence entre {self} et {other} est {difference}")
         # Vérifier si la différence est une fraction d'unité
-        return abs(difference.numerator) == 1 and difference.denominator == 1
+        return difference.is_unit() and self.denominator == other.denominator
 
 
 
