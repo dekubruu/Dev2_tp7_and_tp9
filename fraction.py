@@ -33,23 +33,22 @@ class Fraction:
         return a
 
     def as_mixed_number(self):
-        """Return a textual representation of the reduced form of the fraction as a mixed number
-
-        A mixed number is the sum of an integer and a proper fraction."""
+        """Return a textual representation of the reduced form of the fraction as a mixed number."""
         if self.numerator % self.denominator == 0:
             # La fraction est un entier
             return str(self.numerator // self.denominator)
 
-        # Calcul des parties entière et fractionnaire
         whole = self.numerator // self.denominator
-        fraction_part = abs(self.numerator % self.denominator)
+        fraction_part = abs(self.numerator) % abs(self.denominator)
+
+        if self.numerator < 0 and fraction_part != 0:
+            whole = whole + 1  # Ajuste correctement pour les fractions négatives
 
         if whole == 0:
             # La fraction n'a pas de partie entière
             return f"{self.numerator}/{self.denominator}"
 
-        # Combinaison partie entière et fraction
-        return f"{whole} {fraction_part}/{self.denominator}"
+        return f"{whole} {fraction_part}/{abs(self.denominator)}"
 
     def __str__(self) -> str:
         """Returns a string representation of the fraction."""
@@ -129,7 +128,23 @@ class Fraction:
         """Check if a fraction's numerator is 1 in its reduced form."""
         return self.numerator == 1
 
+    def __sub__(self, other: Union["Fraction", int]) -> "Fraction":
+        """Soustraction des fractions ou des entiers."""
+        if isinstance(other, int):
+            other = Fraction(other, 1)
+        if isinstance(other, Fraction):
+            num = self.numerator * other.denominator - other.numerator * self.denominator
+            den = self.denominator * other.denominator
+            return Fraction(num, den)
+        raise TypeError("La soustraction est uniquement supportée entre des fractions ou des entiers.")
+
     def is_adjacent_to(self, other: 'Fraction') -> bool:
-        """Check if two fractions differ by a unit fraction."""
+        """Vérifie si deux fractions sont adjacentes, c'est-à-dire si leur différence est égale à 1 ou -1."""
         difference = self - other
-        return abs(difference.numerator) == 1 and difference.denominator != 0
+        # Debug: affiche la différence pour vérifier qu'elle est correcte
+        print(f"Debug: Différence entre {self} et {other} est {difference}")
+        # Vérifier si la différence est une fraction d'unité
+        return abs(difference.numerator) == 1 and difference.denominator == 1
+
+
+
