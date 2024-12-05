@@ -138,6 +138,7 @@ class Fraction:
             return Fraction(num, den)
         raise TypeError("La soustraction est uniquement supportée entre des fractions ou des entiers.")
 
+
     def is_adjacent_to(self, other: 'Fraction') -> bool:
         """Vérifie si deux fractions sont adjacentes, c'est-à-dire si leur différence est égale à 1 ou -1."""
         difference = self - other

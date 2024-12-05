@@ -100,5 +100,6 @@ class TestFraction(unittest.TestCase):
         self.assertFalse(f1.is_adjacent_to(f4), "1/3 et 3/4 ne sont pas adjacentes")
 
 
+
 if __name__ == "__main__":
     unittest.main()
