@@ -58,7 +58,7 @@ class TestFraction(unittest.TestCase):
         self.assertFalse(Fraction(3, 2).is_proper())
         self.assertTrue(Fraction(-1, 2).is_proper())
         self.assertFalse(Fraction(-3, 2).is_proper())
-        self.assertTrue(Fraction(10, 10).is_proper())
+        self.assertTrue(Fraction(5, 10).is_proper())
 
     def test_operations(self):
         """Test des opérations arithmétiques."""
@@ -68,7 +68,15 @@ class TestFraction(unittest.TestCase):
 
         # Addition Fraction Négative
         self.assertEqual(Fraction(-1, 2) + Fraction(-1, 2), Fraction(-1, 1))
-        self.assertEqual(Fraction(-3, 4) + Fraction(-1, 4), Fraction(1, 2))
+        self.assertEqual(Fraction(-3, 4) + Fraction(-1, 4), Fraction(-1, 1))
+
+        # Cette ligne couvre `other = Fraction(other, 1) de __add__`
+        self.assertEqual(Fraction(3,4) + 2, Fraction(11,4))
+
+        f = Fraction(3, 4)
+        with self.assertRaises(TypeError):
+            f + "mom"  # Addition avec un type non supporté
+
 
         # Soustraction fraction positive
         self.assertEqual(Fraction(3, 4) - Fraction(1, 4), Fraction(1, 2))
@@ -78,13 +86,25 @@ class TestFraction(unittest.TestCase):
         self.assertEqual(Fraction(-5, 1) - Fraction(-1, 1), Fraction(-4, 1))
         self.assertEqual(Fraction(-3, 4) - Fraction(-1, 3), Fraction(-5, 12))
 
+        # Cette ligne couvre `other = Fraction(other, 1) de __sub__`
+        self.assertEqual(Fraction(3, 4) - 2, Fraction(-5, 4))
+
+        with self.assertRaises(TypeError):
+            f - "mom"  # Soustraction avec un type non supporté
+
         # Multiplication positive
         self.assertEqual(Fraction(2, 3) * Fraction(3, 4), Fraction(1, 2))
-        self.assertEqual(Fraction(5, 3) * Fraction(5, 4), Fraction(5, 3))
+        self.assertEqual(Fraction(5, 3) * Fraction(5, 4), Fraction(25, 12))
 
         # Multiplication negative
         self.assertEqual(Fraction(-2, 3) * Fraction(-3, 4), Fraction(1, 2))
-        self.assertEqual(Fraction(-5, 3) * Fraction(-5, 4), Fraction(5, 3))
+        self.assertEqual(Fraction(-5, 3) * Fraction(-5, 4), Fraction(25, 12))
+
+        # Cette ligne couvre `other = Fraction(other, 1) de __mul__`
+        self.assertEqual(Fraction(3, 4) * 2, Fraction(3, 2))
+
+        with self.assertRaises(TypeError):
+            f * "mom"  # Multiplication avec un type non supporté
 
         # Division positive
         self.assertEqual(Fraction(1, 2) / Fraction(1, 4), Fraction(2, 1))
@@ -94,14 +114,35 @@ class TestFraction(unittest.TestCase):
         self.assertEqual(Fraction(-1, 2) / Fraction(-1, 4), Fraction(2, 1))
         self.assertEqual(Fraction(-3, 2) / Fraction(-5, 4), Fraction(6, 5))
 
+        # Cette ligne couvre `other = Fraction(other, 1) de __truediv__`
+        self.assertEqual(Fraction(3, 4) / 2, Fraction(3, 8))
+
         with self.assertRaises(ZeroDivisionError):
             Fraction(1, 2) / Fraction(0, 1)
 
+        with self.assertRaises(TypeError):
+            f / "mom"  # Division avec un type non supporté
+
     def test_comparison(self):
         """Test des comparaisons."""
+        #Comparaison fraction positive
         self.assertTrue(Fraction(1, 2) == Fraction(2, 4))
         self.assertFalse(Fraction(1, 2) == Fraction(2, 3))
-        self.assertFalse(Fraction(1, 3) == Fraction(1, 2))
+
+        #Compairason fraction negative
+        self.assertTrue(Fraction(-1,2) == Fraction(-2,4))
+        self.assertFalse(Fraction(-1, 2) == Fraction(2, 3))
+
+        #Comparaison fraction nulle
+        self.assertTrue(Fraction(0,2) == Fraction(0,4))
+
+        #Comparaison fraction un
+        self.assertTrue(Fraction(2,2) == Fraction(3,3))
+
+        f = Fraction(3, 4)
+        self.assertFalse(f == "string")  # Comparaison avec un type non supporté
+        self.assertFalse(f == 2)        # Comparaison avec un entier
+        self.assertFalse(f == [3, 4])  # Comparaison avec une liste
 
     def test_power(self):
         """Test des puissances."""
@@ -139,6 +180,13 @@ class TestFraction(unittest.TestCase):
         # Cas attendus comme faux
         self.assertFalse(f1.is_adjacent_to(f3), "1/3 et 1/2 ne sont pas adjacentes, différence = -1/6")  # Faux
         self.assertFalse(f1.is_adjacent_to(f4), "1/3 et 3/4 ne sont pas adjacentes")
+
+    def test_to_float(self):
+        f = Fraction(3, 4)  # Fraction valide
+        self.assertAlmostEqual(float(f), 0.75)  # Vérifie la conversion en float
+
+        f_negative = Fraction(-5, 2)  # Fraction négative
+        self.assertAlmostEqual(float(f_negative), -2.5)  # Vérifie la conversion négative
 
 
 
