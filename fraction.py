@@ -1,5 +1,5 @@
 from typing import Union
-import math
+from math import gcd
 
 class Fraction:
     """Class representing a fraction and operations on it.
@@ -11,9 +11,9 @@ class Fraction:
         if denominator == 0:
             raise ValueError("Denominator cannot be zero.")
 
-        gcd = math.gcd(numerator, denominator)
-        self._numerator = numerator // gcd
-        self._denominator = denominator // gcd
+        gcdd = gcd(numerator, denominator)
+        self._numerator = numerator // gcdd
+        self._denominator = denominator // gcdd
 
     @property
     def numerator(self) -> int:
@@ -25,12 +25,6 @@ class Fraction:
 
 
 
-    @staticmethod
-    def _pgcd(a: int, b: int) -> int:
-        """Compute the greatest common divisor (GCD) using Euclid's algorithm."""
-        while b:
-            a, b = b, a % b
-        return a
 
     def as_mixed_number(self):
         """Return a textual representation of the reduced form of the fraction as a mixed number."""
@@ -127,16 +121,6 @@ class Fraction:
     def is_unit(self) -> bool:
         """Check if a fraction's numerator is 1 in its reduced form."""
         return abs(self.numerator) == 1
-
-    def __sub__(self, other: Union["Fraction", int]) -> "Fraction":
-        """Soustraction des fractions ou des entiers."""
-        if isinstance(other, int):
-            other = Fraction(other, 1)
-        if isinstance(other, Fraction):
-            num = self.numerator * other.denominator - other.numerator * self.denominator
-            den = self.denominator * other.denominator
-            return Fraction(num, den)
-        raise TypeError("La soustraction est uniquement supportée entre des fractions ou des entiers.")
 
 
     def is_adjacent_to(self, other: 'Fraction') -> bool:
