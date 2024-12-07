@@ -148,7 +148,7 @@ class TestFraction(unittest.TestCase):
         """Test des puissances."""
         self.assertEqual(Fraction(2, 3) ** 2, Fraction(4, 9))
         self.assertEqual(Fraction(2, 3) ** -1, Fraction(3, 2))
-        self.assertEqual(Fraction(3, 2) ** 0, Fraction(1, 1))
+        self.assertEqual(Fraction(2, 3) ** 0, Fraction(1, 1))
 
     def test_is_zero(self):
         """Test de la méthode is_zero."""
