@@ -188,6 +188,25 @@ class TestFraction(unittest.TestCase):
         f_negative = Fraction(-5, 2)  # Fraction négative
         self.assertAlmostEqual(float(f_negative), -2.5)  # Vérifie la conversion négative
 
+    def test_str_coverage(self):
+        """Test la méthode __str__ pour couvrir tous les cas."""
+        # Cas général : dénominateur différent de 1
+        f1 = Fraction(3, 4)
+        self.assertEqual(str(f1), "3/4")  # Affiche "3/4"
+
+        f2 = Fraction(-7, 8)
+        self.assertEqual(str(f2), "-7/8")  # Affiche "-7/8"
+
+        # Cas fraction équivalente à un entier (dénominateur == 1)
+        f3 = Fraction(5, 1)
+        self.assertEqual(str(f3), "5")  # Affiche "5"
+
+        f4 = Fraction(-3, 1)
+        self.assertEqual(str(f4), "-3")  # Affiche "-3"
+
+        # Cas zéro
+        f5 = Fraction(0, 3)
+        self.assertEqual(str(f5), "0")  # Affiche "0"
 
 
 if __name__ == "__main__":

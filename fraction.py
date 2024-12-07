@@ -23,9 +23,6 @@ class Fraction:
     def denominator(self) -> int:
         return self._denominator
 
-
-
-
     def as_mixed_number(self):
         """Return a textual representation of the reduced form of the fraction as a mixed number."""
         if self.numerator % self.denominator == 0:
